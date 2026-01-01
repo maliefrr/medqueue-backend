@@ -8,7 +8,7 @@ export const getRole = async (_req: Request, res: Response) => {
         return res.json(roles);
     } catch (err: unknown) {
         if (err instanceof DatabaseError) {
-            return res.status(err.statusCode).json({ error: 'Database error' });
+            return res.status(err.statusCode).json({ error: err.message });
         }
 
         const message = err instanceof Error ? err.message : 'Internal server error';
@@ -30,7 +30,7 @@ export const createRole = async (req: Request, res: Response) => {
         }
 
         if (err instanceof DatabaseError) {
-            return res.status(err.statusCode).json({ error: 'Database error' });
+            return res.status(err.statusCode).json({ error: err.message });
         }
 
         const message = err instanceof Error ? err.message : 'Internal server error';
@@ -43,12 +43,16 @@ export const getRoleByIdController = async (req: Request, res: Response) => {
    try {
         const role = await getRoleById(id);
         if (!role) {
-            return res.status(404).json({ error: 'Role not found' });
+            throw new BadRequestError('Role not found');
         }
         return res.json(role);
    } catch (error) {
+        if (error instanceof BadRequestError) {
+            return res.status(error.statusCode).json({ error: error.message });
+        }
+
         if (error instanceof DatabaseError) {
-            return res.status(error.statusCode).json({ error: 'Database error' });
+            return res.status(error.statusCode).json({ error: error.message });
         }
 
         const message = error instanceof Error ? error.message : 'Internal server error';
@@ -70,7 +74,7 @@ export const updateRoleController = async (req: Request, res: Response) => {
         }
 
         if (error instanceof DatabaseError) {
-            return res.status(error.statusCode).json({ error: 'Database error' });
+            return res.status(error.statusCode).json({ error: error.message });
         }
 
         const message = error instanceof Error ? error.message : 'Internal server error';
@@ -85,7 +89,7 @@ export const deleteRoleController = async (req: Request, res: Response) => {
         return res.status(204).send();
     } catch (error) {
         if (error instanceof DatabaseError) {
-            return res.status(error.statusCode).json({ error: 'Database error' });
+            return res.status(error.statusCode).json({ error: error.message });
         }
 
         const message = error instanceof Error ? error.message : 'Internal server error';

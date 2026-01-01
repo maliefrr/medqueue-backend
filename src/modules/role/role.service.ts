@@ -64,6 +64,8 @@ export const updateRole = async (input: NewRole, id: string) => {
 }
 
 export const deleteRole = async (id: string): Promise<void> => {
+    if (!id) throw new BadRequestError('Role ID is required');
+
     const result = await pool.query(
         'UPDATE medqueue.role SET deleted_at = NOW() WHERE id = $1',
         [id]
