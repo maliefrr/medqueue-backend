@@ -1,5 +1,4 @@
 import pool from "../../database";
-import { DatabaseError } from "../../errors/serviceErrors";
 
 export const getSchemaAndTables = async (): Promise<Record<string, string[]>> => {
     const result = await pool.query(
@@ -9,8 +8,6 @@ export const getSchemaAndTables = async (): Promise<Record<string, string[]>> =>
            AND table_schema NOT IN ('pg_catalog','information_schema')
          ORDER BY table_schema, table_name`
     );
-
-    if (!result) throw new DatabaseError('Failed to fetch schema information');
 
     const grouped: Record<string, string[]> = {};
     for (const row of result.rows) {

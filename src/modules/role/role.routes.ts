@@ -6,14 +6,15 @@ import {
     getRoleByIdController, 
     updateRoleController
 } from './role.controller';
+import { authenticateAndAuthorizeRoleManagement } from '../../middleware/auth.middleware';
 
 const router = Router()
 
-router.get('/', getRole)
-router.get('/:id', getRoleByIdController)
-router.post('/create', createRole)
-router.put('/update/:id', updateRoleController)
-router.delete('/delete/:id', deleteRoleController)
+router.get('/', authenticateAndAuthorizeRoleManagement, getRole)
+router.get('/:id', authenticateAndAuthorizeRoleManagement, getRoleByIdController)
+router.post('/create', authenticateAndAuthorizeRoleManagement, createRole)
+router.put('/update/:id', authenticateAndAuthorizeRoleManagement, updateRoleController)
+router.delete('/delete/:id', authenticateAndAuthorizeRoleManagement, deleteRoleController)
 
 
 export default router;
