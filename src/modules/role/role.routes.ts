@@ -1,17 +1,19 @@
 import { Router } from 'express'
 import { 
     createRole, 
-    deleteRole, 
+    deleteRoleController, 
     getRole, 
-    updateRole 
+    getRoleByIdController, 
+    updateRoleController
 } from './role.controller';
 
 const router = Router()
 
 router.get('/', getRole)
+router.get('/:id', getRoleByIdController)
 router.post('/create', createRole)
-router.put('/update', updateRole)
-router.delete('/delete', deleteRole)
+router.put('/update/:id', updateRoleController)
+router.delete('/delete/:id', deleteRoleController)
 
 
 export default router;
