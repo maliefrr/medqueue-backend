@@ -1,30 +1,7 @@
 import { Response, Request } from "express";
 import { addRole, getAllRoles, getRoleById, updateRole, deleteRole} from "./role.service";
 import { BadRequestError, DatabaseError, NotFoundError } from "../../errors/serviceErrors";
-
-// Validation helper for role name
-const validateRoleName = (role: string): void => {
-    if (!role) {
-        throw new BadRequestError('Role is required');
-    }
-    if (typeof role !== 'string') {
-        throw new BadRequestError('Role must be a string');
-    }
-    if (role.length < 1 || role.length > 50) {
-        throw new BadRequestError('Role name must be between 1 and 50 characters');
-    }
-    if (!/^[a-zA-Z0-9_]+$/.test(role)) {
-        throw new BadRequestError('Role name can only contain letters, numbers, and underscores');
-    }
-};
-
-// Validation helper for UUID
-const validateUUID = (id: string): void => {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(id)) {
-        throw new BadRequestError('Invalid ID format. Must be a valid UUID');
-    }
-};
+import { validateRoleName, validateUUID } from "../../helpers/validation.helper";
 
 export const getRole = async (_req: Request, res: Response) => {
     try {
