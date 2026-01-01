@@ -1,13 +1,20 @@
 import { Role } from "../../interfaces/role.interfaces";
 import pool from "../../database";
 import { BadRequestError, DatabaseError } from "../../errors/serviceErrors";
+import { checkRoleExists } from "./role.middleware";
 
 type NewRole = {
     role: string;
 };
 
+
+
 export const addRole = async (input: NewRole): Promise<Role> => {
     if (!input.role) throw new BadRequestError('Invalid role data');
+
+    if (await checkRoleExists(input.role)) {
+        throw new BadRequestError('Role already exists');
+    }
 
     const result = await pool.query(
         'INSERT INTO medqueue.role (role) VALUES ($1) RETURNING *',
@@ -42,6 +49,10 @@ export const getRoleById = async (id: string): Promise<Role | null> => {
 export const updateRole = async (input: NewRole, id: string) => {
     if (!input.role) throw new BadRequestError('Invalid role data');
     if (!id) throw new BadRequestError('Role ID is required');
+
+    if (await checkRoleExists(input.role)) {
+        throw new BadRequestError('Role already exists');
+    }
 
     const result = await pool.query(
         'UPDATE medqueue.role SET role = $1, updated_at = NOW() WHERE id = $2 RETURNING *',
