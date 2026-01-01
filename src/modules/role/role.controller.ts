@@ -13,8 +13,8 @@ const validateRoleName = (role: string): void => {
     if (role.length < 1 || role.length > 50) {
         throw new BadRequestError('Role name must be between 1 and 50 characters');
     }
-    if (!/^[a-zA-Z0-9_\s-]+$/.test(role)) {
-        throw new BadRequestError('Role name can only contain letters, numbers, spaces, hyphens, and underscores');
+    if (!/^[a-zA-Z0-9_]+$/.test(role)) {
+        throw new BadRequestError('Role name can only contain letters, numbers, and underscores');
     }
 };
 

@@ -23,9 +23,9 @@ export const addRole = async (input: NewRole): Promise<Role> => {
         if (result.rowCount === 0) throw new DatabaseError('Failed to insert role');
 
         return result.rows[0] as Role;
-    } catch (err: any) {
+    } catch (err: unknown) {
         // Check if it's a unique constraint violation
-        if (err.code === '23505') {
+        if (typeof err === 'object' && err !== null && 'code' in err && err.code === '23505') {
             throw new BadRequestError('Role already exists');
         }
         throw err;

@@ -56,15 +56,31 @@ export const authenticateSchemaAccess = (req: Request, res: Response, next: Next
         return;
     }
 
-    const base64Credentials = authHeader.substring(6);
-    const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
-    const [username, password] = credentials.split(':');
+    try {
+        const base64Credentials = authHeader.substring(6);
+        const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8');
+        const parts = credentials.split(':');
+        
+        // Ensure we have exactly username and password
+        if (parts.length < 2) {
+            res.set('WWW-Authenticate', 'Basic realm="schema"');
+            res.status(401).send('Authentication required');
+            return;
+        }
+        
+        const username = parts[0];
+        const password = parts.slice(1).join(':'); // Handle passwords with colons
 
-    if (username !== expectedUser || password !== expectedPass) {
+        if (username !== expectedUser || password !== expectedPass) {
+            res.set('WWW-Authenticate', 'Basic realm="schema"');
+            res.status(401).send('Authentication required');
+            return;
+        }
+
+        next();
+    } catch (error) {
+        // Handle malformed base64 or other parsing errors
         res.set('WWW-Authenticate', 'Basic realm="schema"');
         res.status(401).send('Authentication required');
-        return;
     }
-
-    next();
 };
