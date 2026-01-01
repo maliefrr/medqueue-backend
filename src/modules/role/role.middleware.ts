@@ -7,5 +7,5 @@ export const checkRoleExists = async (role: string): Promise<boolean> => {
     )
 
     
-    return result.rowCount! > 0;
+    return (result.rowCount ?? 0) > 0;
 }

@@ -8,7 +8,7 @@ export const getSchema = async (_req: Request, res: Response) => {
         return res.json(data);
     } catch (err: unknown) {
         if (err instanceof DatabaseError) {
-            return res.status(err.statusCode).json({ error: 'Database error' });
+            return res.status(err.statusCode).json({ error: err.message });
         }
 
         const message = err instanceof Error ? err.message : 'Internal server error';

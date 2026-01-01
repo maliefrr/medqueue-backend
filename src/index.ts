@@ -19,11 +19,12 @@ app.use('/auth', authRoutes);
 app.use('/schedules', scheduleRoutes);
 app.use('/clinics', clinicRoutes)
 app.use('/roles', roleRoutes)
-app.use('/', rootRoutes)
 
 app.get('/', (_req: Request, res: Response) => {
   res.json({ message: 'MedQueue Backend API' });
 });
+
+app.use('/api', rootRoutes)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
